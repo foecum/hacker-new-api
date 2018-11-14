@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/foecum/hackernews/client"
+	"github.com/foecum/hackernews/http"
 )
 
 // Item fro Hackernews
@@ -20,14 +20,19 @@ type Item struct {
 	URL     string        `json:"url"`
 	Score   int64         `json:"score"`
 	Title   string        `json:"title"`
+	Text    string        `json:"text"`
 }
 
-// GetHackerNewItem ...
-func GetHackerNewItem(itemID int) (Item, error) {
+func getHackerNewItem(itemID int) (Item, error) {
 	path := fmt.Sprintf("item/%d.json?print=pretty", itemID)
-	c := client.NewHTTPClient()
+	c, err := client.NewHTTPClient()
 
 	item := Item{}
+
+	if err != nil {
+		return item, err
+	}
+
 	decoder, err := c.MakeRequest("GET", path, nil)
 
 	if err != nil {

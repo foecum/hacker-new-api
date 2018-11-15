@@ -4,28 +4,28 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/foecum/hackernews/http"
+	"github.com/foecum/hackernews/conn"
 )
 
 // Item fro Hackernews
 type Item struct {
-	ID      int64         `json:"id,ommitempty"`
+	Dead    bool          `json:"dead"`
 	Deleted bool          `json:"deleted"`
+	ID      int64         `json:"id,ommitempty"`
+	Parent  int64         `json:"parent"`
+	Score   int64         `json:"score"`
+	Created time.Duration `json:"time"`
+	Kids    []int64       `json:"kids"`
 	Type    string        `json:"type"`
 	Author  string        `json:"by"`
-	Created time.Duration `json:"time"`
-	Dead    bool          `json:"dead"`
-	Parent  int64         `json:"parent"`
-	Kids    []int64       `json:"kids"`
 	URL     string        `json:"url"`
-	Score   int64         `json:"score"`
 	Title   string        `json:"title"`
 	Text    string        `json:"text"`
 }
 
 func getHackerNewItem(itemID int) (Item, error) {
 	path := fmt.Sprintf("item/%d.json?print=pretty", itemID)
-	c, err := client.NewHTTPClient()
+	c, err := conn.NewClient("")
 
 	item := Item{}
 
